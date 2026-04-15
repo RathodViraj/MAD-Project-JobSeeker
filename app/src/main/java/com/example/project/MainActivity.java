@@ -2,6 +2,7 @@ package com.example.project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private JobAdapter adapter;
     private List<Job> jobList;
     private TextView textViewLogout;
+    private ImageView imageViewProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,15 +32,19 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        // Initialize Logout button (added to the header in layout)
+        // Initialize Logout button
         textViewLogout = findViewById(R.id.textViewLogout);
-        if (textViewLogout != null) {
-            textViewLogout.setOnClickListener(v -> {
-                UserSession.logout();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            });
+        textViewLogout.setOnClickListener(v -> {
+            UserSession.logout();
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        // Load profile photo in header if available
+        imageViewProfile = findViewById(R.id.imageViewProfileHeader);
+        if (UserSession.getProfilePicUri() != null) {
+            imageViewProfile.setImageURI(UserSession.getProfilePicUri());
         }
 
         recyclerView = findViewById(R.id.recyclerViewJobs);

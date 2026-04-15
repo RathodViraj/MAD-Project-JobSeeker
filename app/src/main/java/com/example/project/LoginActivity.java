@@ -29,10 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin = findViewById(R.id.buttonLogin);
         buttonSignup = findViewById(R.id.buttonSignup);
 
-        // Simple Login logic: accept any input
         buttonLogin.setOnClickListener(v -> handleAuth("Login Successful"));
-
-        // Simple Signup logic: accept any input
         buttonSignup.setOnClickListener(v -> handleAuth("Signup Successful"));
     }
 
@@ -46,13 +43,17 @@ public class LoginActivity extends AppCompatActivity {
             // Update session
             UserSession.setLoggedIn(true, email);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            startMainActivity();
+            
+            // Redirect to Profile Photo Upload instead of MainActivity
+            Intent intent = new Intent(LoginActivity.this, ProfilePhotoActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
     private void startMainActivity() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
-        finish(); // Close LoginActivity so user can't go back to it
+        finish();
     }
 }

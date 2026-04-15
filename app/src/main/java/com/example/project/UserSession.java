@@ -1,16 +1,17 @@
 package com.example.project;
 
+import android.net.Uri;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * A simple helper class to store global app state like the logged-in user
  * and the list of jobs the user has applied for.
- * In a real app, this would be replaced by a database or SharedPreferences.
  */
 public class UserSession {
     private static boolean isLoggedIn = false;
     private static String userEmail = "";
+    private static Uri profilePicUri = null;
     
     // Store unique keys for applied jobs (e.g., "Title @ Company")
     private static Set<String> appliedJobKeys = new HashSet<>();
@@ -24,6 +25,14 @@ public class UserSession {
         userEmail = email;
     }
 
+    public static void setProfilePicUri(Uri uri) {
+        profilePicUri = uri;
+    }
+
+    public static Uri getProfilePicUri() {
+        return profilePicUri;
+    }
+
     public static void applyForJob(String jobTitle, String company) {
         appliedJobKeys.add(jobTitle + "@" + company);
     }
@@ -35,6 +44,7 @@ public class UserSession {
     public static void logout() {
         isLoggedIn = false;
         userEmail = "";
+        profilePicUri = null;
         appliedJobKeys.clear();
     }
 }
