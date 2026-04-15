@@ -1,0 +1,31 @@
+JobSeeker Application - Concepts Used
+
+1. Activities:
+   - Each screen in the app is an Activity (MainActivity, JobDetailActivity, ApplyActivity).
+   - Each Activity is declared in the AndroidManifest.xml.
+
+2. Intents:
+   - Explicit Intents: Used to navigate between activities (e.g., from MainActivity to JobDetailActivity).
+   - Implicit Intent: Used for the file picker to select a PDF from the device storage.
+   - Extras: Used to pass data (Job object) between activities via intent.putExtra().
+
+3. RecyclerView:
+   - Used for the job list on the main screen.
+   - JobAdapter: Binds the list of Job objects to the RecyclerView items.
+   - JobViewHolder: Holds the references to the UI components for each job item.
+   - LayoutManager (LinearLayoutManager): Manages how items are displayed in the list.
+
+4. Layouts and Views:
+   - LinearLayout and ConstraintLayout: Used to structure the UI components.
+   - TextView: To display text information (job title, company, etc.).
+   - EditText: To capture user input for name and qualification.
+   - Button: To trigger actions like navigating, opening file picker, and submitting the application.
+
+5. File Handling (PDF selection):
+   - Uses Intent.ACTION_GET_CONTENT with type "application/pdf".
+   - ActivityResultLauncher: A modern way to handle the result from the file picker and get the Uri of the selected file.
+
+6. Basic Validation:
+   - Empty checks: Ensures the user enters their name and qualification.
+   - File selection check: Verifies that a PDF file has been selected before allowing submission.
+   - Toast: Displays feedback to the user after submission.
