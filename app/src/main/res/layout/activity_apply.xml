@@ -13,7 +13,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:padding="16dp"
-        android:background="@color/black"
+        android:background="@android:color/black"
         android:textColor="@android:color/white"
         android:gravity="center" />
 
@@ -59,6 +59,54 @@
                 android:hint="e.g. B.Tech in CS"
                 android:inputType="text"
                 android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current CTC (in LPA)" />
+            <EditText
+                android:id="@+id/editTextCurrentCTC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. 5.5"
+                android:inputType="numberDecimal"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expected CTC (in LPA)" />
+            <EditText
+                android:id="@+id/editTextExpectedCTC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. 8.0"
+                android:inputType="numberDecimal"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notice Period (in Days)" />
+            <EditText
+                android:id="@+id/editTextNoticePeriod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. 30 (0 for immediate)"
+                android:inputType="number"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preferred Work Location" />
+            <EditText
+                android:id="@+id/editTextLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. Bangalore, Remote"
+                android:inputType="text"
+                android:layout_marginBottom="24dp" />
 
             <Button
                 android:id="@+id/buttonUploadResume"

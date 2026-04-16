@@ -13,7 +13,6 @@
         android:theme="@style/Theme.Project"
         tools:targetApi="31">
         
-        <!-- Launcher set to LoginActivity -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -22,6 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ProfilePhotoActivity"
+            android:exported="false"
+            android:label="Profile Photo" />
 
         <activity
             android:name=".MainActivity"

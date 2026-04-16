@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import java.io.ByteArrayOutputStream;
 
 public class ProfilePhotoActivity extends AppCompatActivity {
 
@@ -44,14 +43,18 @@ public class ProfilePhotoActivity extends AppCompatActivity {
         );
 
         // Launcher for Camera (Thumbnail)
-        ActivityResultLauncher<Bitmap> cameraLauncher = registerForActivityResult(
+        // Fixed: TakePicturePreview takes Void as input and returns Bitmap in the callback.
+        // Therefore, the launcher type should be ActivityResultLauncher<Void>.
+        ActivityResultLauncher<Void> cameraLauncher = registerForActivityResult(
                 new ActivityResultContracts.TakePicturePreview(),
                 result -> {
                     if (result != null) {
                         imageViewPreview.setImageBitmap(result);
                         // Convert bitmap to URI for consistency (Simplified for practical)
                         String path = MediaStore.Images.Media.insertImage(getContentResolver(), result, "ProfilePic", null);
-                        imageUri = Uri.parse(path);
+                        if (path != null) {
+                            imageUri = Uri.parse(path);
+                        }
                         buttonContinue.setVisibility(View.VISIBLE);
                     }
                 }
