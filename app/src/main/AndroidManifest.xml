@@ -38,6 +38,10 @@
         <activity
             android:name=".ApplyActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".ListDisplayActivity"
+            android:exported="false" />
             
     </application>
 

@@ -6,12 +6,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 import java.util.List;
 
-// Adapter class to bind Job data to the RecyclerView
 public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
 
     private List<Job> jobList;
+    private List<Job> jobListFiltered;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -20,7 +21,25 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
 
     public JobAdapter(List<Job> jobList, OnItemClickListener listener) {
         this.jobList = jobList;
+        this.jobListFiltered = new ArrayList<>(jobList);
         this.listener = listener;
+    }
+
+    public void filter(String query) {
+        jobListFiltered.clear();
+        if (query.isEmpty()) {
+            jobListFiltered.addAll(jobList);
+        } else {
+            String lowerCaseQuery = query.toLowerCase().trim();
+            for (Job job : jobList) {
+                if (job.getTitle().toLowerCase().contains(lowerCaseQuery) ||
+                    job.getCompany().toLowerCase().contains(lowerCaseQuery) ||
+                    job.getLocation().toLowerCase().contains(lowerCaseQuery)) {
+                    jobListFiltered.add(job);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -32,27 +51,38 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
-        Job job = jobList.get(position);
+        Job job = jobListFiltered.get(position);
         holder.textViewTitle.setText(job.getTitle());
         holder.textViewCompany.setText(job.getCompany());
+        holder.textViewLocation.setText(job.getLocation());
         holder.textViewDate.setText(job.getDatePosted());
         
+        if (job.isClosed()) {
+            holder.statusTag.setVisibility(View.VISIBLE);
+            holder.itemView.setAlpha(0.6f);
+        } else {
+            holder.statusTag.setVisibility(View.GONE);
+            holder.itemView.setAlpha(1.0f);
+        }
+
         holder.itemView.setOnClickListener(v -> listener.onItemClick(job));
     }
 
     @Override
     public int getItemCount() {
-        return jobList.size();
+        return jobListFiltered.size();
     }
 
     public static class JobViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewTitle, textViewCompany, textViewDate;
+        TextView textViewTitle, textViewCompany, textViewLocation, textViewDate, statusTag;
 
         public JobViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.textViewJobTitle);
             textViewCompany = itemView.findViewById(R.id.textViewCompany);
+            textViewLocation = itemView.findViewById(R.id.textViewLocation);
             textViewDate = itemView.findViewById(R.id.textViewDate);
+            statusTag = itemView.findViewById(R.id.textViewStatus);
         }
     }
 }

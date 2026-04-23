@@ -25,7 +25,6 @@ public class ApplyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply);
 
-        // Get the Job object to know which job we are applying for
         job = (Job) getIntent().getSerializableExtra("job_data");
 
         editTextName = findViewById(R.id.editTextName);
@@ -44,52 +43,37 @@ public class ApplyActivity extends AppCompatActivity {
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         selectedPdfUri = result.getData().getData();
+                        
+                        // TAKE PERSISTABLE PERMISSION
+                        try {
+                            getContentResolver().takePersistableUriPermission(selectedPdfUri, 
+                                    Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        } catch (SecurityException e) {
+                            // Some providers don't support persistable permissions
+                        }
+                        
                         textViewFileName.setText("File selected: " + selectedPdfUri.getLastPathSegment());
                     }
                 }
         );
 
         buttonUploadResume.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            // Using ACTION_OPEN_DOCUMENT for better URI persistence
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("application/pdf");
             filePickerLauncher.launch(intent);
         });
 
         buttonSubmit.setOnClickListener(v -> {
             String name = editTextName.getText().toString().trim();
-            String qualification = editTextQualification.getText().toString().trim();
-            String currentCTC = editTextCurrentCTC.getText().toString().trim();
-            String expectedCTC = editTextExpectedCTC.getText().toString().trim();
-            String noticePeriod = editTextNoticePeriod.getText().toString().trim();
-            String location = editTextLocation.getText().toString().trim();
-
-            // Basic Validation for all fields
-            if (name.isEmpty()) {
-                editTextName.setError("Name is required");
-            } else if (qualification.isEmpty()) {
-                editTextQualification.setError("Qualification is required");
-            } else if (currentCTC.isEmpty()) {
-                editTextCurrentCTC.setError("Current CTC is required");
-            } else if (expectedCTC.isEmpty()) {
-                editTextExpectedCTC.setError("Expected CTC is required");
-            } else if (noticePeriod.isEmpty()) {
-                editTextNoticePeriod.setError("Notice period is required");
-            } else if (location.isEmpty()) {
-                editTextLocation.setError("Location preference is required");
-            } else if (selectedPdfUri == null) {
-                Toast.makeText(this, "Please upload your resume", Toast.LENGTH_SHORT).show();
+            if (name.isEmpty() || selectedPdfUri == null) {
+                Toast.makeText(this, "Please fill required fields and upload resume", Toast.LENGTH_SHORT).show();
             } else {
-                // Save the application status in the session
                 if (job != null) {
-                    UserSession.applyForJob(job.getTitle(), job.getCompany());
+                    UserSession.applyForJob(job, selectedPdfUri);
                 }
-                
-                Toast.makeText(this, "Application Submitted Successfully!", Toast.LENGTH_LONG).show();
-                
-                // Return to MainActivity and refresh
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
+                Toast.makeText(this, "Application Submitted!", Toast.LENGTH_LONG).show();
                 finish();
             }
         });
